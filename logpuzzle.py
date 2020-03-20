@@ -100,7 +100,7 @@ def main(args):
 
     if parsed_args.todir:
         download_images(img_urls, parsed_args.todir)
-        timeit_helper()
+        # timeit_helper()
     else:
         print('\n'.join(img_urls))
 
