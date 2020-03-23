@@ -16,6 +16,7 @@ Here's what a puzzle url looks like:
 
 """
 
+
 import os
 import re
 import sys
@@ -61,7 +62,7 @@ def download_images(img_urls, dest_dir):
         filename = dest_dir + '/img' + str(index)
         urllib.urlretrieve(url, filename)
         with open(dest_dir + '/index.html', "a") as f:
-            f.write('<img src=' + url + '>' + 'img' + str(index) + '<img>' + '\n')
+            f.write('<img src="../animaldir/img' + str(index) + '"' + '/>' + '\n')
 
 
 
