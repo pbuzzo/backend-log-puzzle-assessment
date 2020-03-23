@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 """
 Logpuzzle exercise
 
@@ -16,20 +16,32 @@ Here's what a puzzle url looks like:
 
 """
 
+
 import os
 import re
 import sys
 import urllib
 import argparse
+import timeit
+
+
 
 
 def read_urls(filename):
+    url_list = []
     """Returns a list of the puzzle urls from the given log file,
     extracting the hostname from the filename itself.
     Screens out duplicate urls and returns the urls sorted into
     increasing order."""
-    # +++your code here+++
-    pass
+    with open(filename, "r") as f:
+        read = f.readlines()
+        for url_line in read:
+            finder = re.search(r'GET\s(\S+)\sHTTP', url_line)
+            url_list.append('http://code.google.com' + finder.group(1))
+        # for i in url_list:
+        #     print(i)
+        url_list = sorted(list(set(url_list)))
+        return url_list
 
 
 def download_images(img_urls, dest_dir):
@@ -40,8 +52,29 @@ def download_images(img_urls, dest_dir):
     with an img tag to show each local image file.
     Creates the directory if necessary.
     """
-    # +++your code here+++
-    pass
+    if not os.path.isdir(dest_dir):
+        os.mkdir(dest_dir)
+    if not os.path.exists(dest_dir + 'index.html'):
+        with open(dest_dir + '/index.html', "w") as f:
+            pass
+
+    for index, url in enumerate(img_urls):
+        filename = dest_dir + '/img' + str(index)
+        urllib.urlretrieve(url, filename)
+        with open(dest_dir + '/index.html', "a") as f:
+            f.write('<img src="../animaldir/img' + str(index) + '"' + '/>' + '\n')
+
+
+
+# def timeit_helper():
+#     """Part A:  Obtain some profiling measurements using timeit"""
+#     t = timeit.Timer('read_urls("animal_code.google.com")')
+#     result = t.repeat(repeat=5, number=3)
+#     avg_list = []
+#     for clock in result:
+#         avg_list.append(clock/3)
+#     average = min(avg_list)
+#     print('Best time across 5 repeats of 3 runs per repeat:{} sec'.format(average))
 
 
 def create_parser():
@@ -51,6 +84,7 @@ def create_parser():
     parser.add_argument('logfile', help='apache logfile to extract urls from')
 
     return parser
+
 
 
 def main(args):
@@ -67,6 +101,7 @@ def main(args):
 
     if parsed_args.todir:
         download_images(img_urls, parsed_args.todir)
+        # timeit_helper()
     else:
         print('\n'.join(img_urls))
 
